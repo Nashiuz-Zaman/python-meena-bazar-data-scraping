@@ -1,13 +1,15 @@
 import sys
-from product_urls.collect_product_urls import collect_product_urls
-from product_data.get_product_data import get_product_data
+from product_urls import collect_product_urls
+from product_data import get_product_data, clean_data
+from utils import get_valid_csv_name
 
 
 def show_menu():
     print("\nWhat do you want to do?")
     print("1. Collect Product URLs")
     print("2. Get Products Data")
-    print("3. Exit")
+    print("3. Clean Data")
+    print("4. Exit")
 
 
 def handle_collect_product_urls():
@@ -16,13 +18,9 @@ def handle_collect_product_urls():
         print("❌ URL cannot be empty. Returning to menu.")
         return
 
-    csv_name = input("Enter CSV filename (e.g., meat_urls.csv): ").strip()
+    csv_name = get_valid_csv_name("Enter CSV filename (e.g., meat_urls.csv): ")
     if not csv_name:
-        print("❌ CSV filename cannot be empty. Returning to menu.")
         return
-
-    if not csv_name.endswith(".csv"):
-        csv_name += ".csv"
 
     try:
         collect_product_urls(url, csv_name)
@@ -33,16 +31,31 @@ def handle_collect_product_urls():
     input("\nPress Enter to return to the menu...")
 
 
-def get_products_data():
-    csv_name = input("Enter CSV filename (e.g., meat_urls.csv): ").strip()
+def handle_get_products_data():
+    csv_name = get_valid_csv_name("Enter CSV filename (e.g., meat_urls.csv): ")
     if not csv_name:
-        print("❌ CSV filename cannot be empty. Returning to menu.")
         return
 
     try:
         get_product_data(csv_name)
     except Exception as e:
-        print(f"❌ Failed get data: {e}")
+        print(f"❌ Failed to get data: {e}")
+
+    input("\nPress Enter to return to the menu...")
+
+
+def handle_clean_data():
+    csv_name = get_valid_csv_name(
+        "Enter product data CSV filename (e.g., meat_product_data.csv): "
+    )
+    if not csv_name:
+        return
+
+    try:
+        clean_data(csv_name)
+        print("✅ Data cleaned successfully.")
+    except Exception as e:
+        print(f"❌ Failed to clean data: {e}")
 
     input("\nPress Enter to return to the menu...")
 
@@ -55,8 +68,10 @@ def main():
         if choice == "1":
             handle_collect_product_urls()
         elif choice == "2":
-            get_products_data()
+            handle_get_products_data()
         elif choice == "3":
+            handle_clean_data()
+        elif choice == "4":
             print("👋 Bye!")
             sys.exit()
         else:

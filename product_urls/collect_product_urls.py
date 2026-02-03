@@ -3,7 +3,7 @@ import sys
 import csv
 import os
 import time
-from utils.scroll_until_done import scroll_until_done
+from utils import scroll_until_done
 
 
 def collect_product_urls(url: str, csv_name: str):
@@ -83,5 +83,6 @@ def collect_product_urls(url: str, csv_name: str):
                 print(f"\rProducts done: {i}/{len(data_rows)}", end="")
                 sys.stdout.flush()  # force print
 
-        print(f"Successfully saved {len(clean_urls)} URLs to {csv_path} ✅")
+        print()
+        print(f"Successfully saved {len(clean_urls)} URLs ✅")
         browser.close()
